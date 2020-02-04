@@ -20,8 +20,12 @@ call plug#begin()
 
 " ---------------------------------------------------
 " My Plugins
-" ---------------------------------------------------
+Plug 'luochen1990/rainbow'
+let g:rainbow_active = 1
+"set to 0 if you want to enable it later via :RainbowToggle" ---------------------------------------------------
 
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'yuezk/vim-js'
 
 " buffer bar top emulates tabs
 Plug 'bling/vim-airline'
@@ -46,6 +50,7 @@ Plug 'tpope/vim-git'
 
 " Fuzzy finder (CTRL + P)
 Plug 'kien/ctrlp.vim'
+Plug 'mhinz/vim-mix-format'
 
 
 " ---------------------------------------------------
@@ -106,10 +111,21 @@ call plug#end()
 " between buffers and to see buffer list or make new
 " buffer - uses airline plugin for buffer management
 " ---------------------------------------------------
-
 " set leader to space
 let mapleader=' '
 
+noremap <leader>ff :40Lexplore<CR>
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+
+:nnoremap <Leader>ww <C-w>w
+:nnoremap <Leader>wq <C-w>q
+
+
+"nnoremap <C-S>a :q<CR>
+"nnoremap <C-A>s :bp<CR>:bd#<CR>
 " Working with Buffers Instead of Tabs
 " See: https://joshldavis.com/2014/04/05/vim-tab-madness-buffers-vs-tabs/"
 
@@ -123,7 +139,7 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 " This is almost a must if you wish to use buffers in this way.
 set hidden
 " Needed for close tag to work
-let g:closetag_filenames = "*.html,*.erb,*.rb"
+let g:closetag_filenames = "*.js, *.ex, *.eex, *.exs, *.jsx, *.html,*.erb,*.rb"
 
 " To open a new empty buffer
 " This replaces :tabnew for buffers not tabs
@@ -249,10 +265,15 @@ let g:netrw_preview=1           " open previews vertically
 " ----------------------------------------------------
 
 " sets :Autoformat command as F4
-noremap <F4> :Autoformat<CR>
+"noremap <F4> :Autoformat<CR>
+noremap <leader>mf :MixFormat<CR>
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
+"let g:mix_format_on_save = 1
+let g:mix_format_options = '--check-equivalent'
+let g:mix_format_silent_errors = 1
+
 " ----------------------------------------------------
 " Emmet Contol y leader
 " ----------------------------------------------------
@@ -270,7 +291,7 @@ colorscheme distinguished
 " Control p ignore files and show hidden
 " ----------------------------------------------------
 let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlPMRU'
+"let g:ctrlp_cmd = 'CtrlPMRU'
 " ignored files for ctrlp and MRU
 " MacOSX/Linux
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.png,*.tif,*.psd
@@ -286,9 +307,12 @@ let g:ctrlp_open_multiple_files = '1r'
 let g:ctrlp_match_window = 'top, order:ttb,min:120,max:120,results:20'
 " uses nearest ancestor that contains .git as working path
 let g:ctrlp_working_path_mode = 'ra'
+" strip whitespace on save using plugin
+let g:strip_whitespace_on_save = 1
+let g:strip_whitespace_confirm = 0
 " ----------------------------------------------------
 " set escape from insert mode to jj"
-inoremap jk <Esc>
+inoremap jj <Esc>
 " vnoremap vv <Esc> LEGACY
 
 " ----------------------------------------------------
@@ -326,7 +350,7 @@ set wrap linebreak nolist
 " add a vertical column guide at column 90
 "set colorcolumn=90
 
-" always show this number of lines above/below 
+" always show this number of lines above/below
 set scrolloff=5
 
 " set line numbers to on
@@ -346,7 +370,8 @@ let syntastic_mode_map = { 'passive_filetypes': ['html']  }
 " ----------------------------------------------------
 
 " change line hightlight and column highlight
-:hi CursorLine cterm=NONE ctermbg=236 
+:hi CursorLine cterm=NONE ctermbg=236
+:hi PreProc ctermfg=173
 
 " cursor line highlight is only applied to current window
 augroup CursorLine
@@ -380,6 +405,7 @@ autocmd BufWritePre *.scss :%s/\s\+$//e
 autocmd BufWritePre *.jsx :%s/\s\+$//e
 autocmd BufWritePre *.js :%s/\s\+$//e
 au BufRead,BufNewFile *.php set ft=php.html
+autocmd BufNewFile,BufREad *.jsx set filetype=javascript.jsx
 
 " ----------------------------------------------------
 " Mouse support
@@ -500,7 +526,7 @@ function! StripTrailingWhitespace()
   endif
 endfunction
 
-nmap <leader>tW :cal StripTrailingWhitespace()<cr>
+nmap <leader>sw :cal StripTrailingWhitespace()<cr>
 
 " ---------------------------------------------------
 " Beautify commands specific to file types control f
